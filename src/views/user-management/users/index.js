@@ -163,6 +163,28 @@ const rows = [
 ];
 
 const UserList = () => {
+  // const [data, setData] = React.useState([]);
+
+  React.useEffect(() => {
+    // Fetch data when the component mounts
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('https://cerebro.codspecial.com/api/users', {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }); // Replace with your API URL
+      const jsonData = await response.json();
+      console.log(jsonData);
+      // setData(jsonData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
   return (
     <MainCard
       title="User List"
