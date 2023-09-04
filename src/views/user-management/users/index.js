@@ -14,6 +14,9 @@ import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import MainCard from 'ui-component/cards/MainCard';
 import CardFormAction from 'ui-component/cards/CardFormAction';
 
+// Constants
+const API_URL = 'https://cerebro.codspecial.com/api/users';
+
 const columns = [
   { field: 'id', headerName: 'S. No', width: 90 },
   {
@@ -78,109 +81,36 @@ const columns = [
   }
 ];
 
-const rows = [
-  {
-    id: 1,
-    profile: 'Image',
-    fullName: 'Jon Snow',
-    userName: 'Jon',
-    role: 'Admin | Manager',
-    status: 'Active',
-    action: 'Edit'
-  },
-  {
-    id: 2,
-    profile: 'Image',
-    fullName: 'Jaime Lannister',
-    userName: 'Jaime',
-    role: 'Admin | Manager',
-    status: 'Active',
-    action: 'Edit'
-  },
-  {
-    id: 3,
-    profile: 'Image',
-    fullName: 'Arya Stark',
-    userName: 'Arya',
-    role: 'Admin | Manager',
-    status: 'Active',
-    action: 'Edit'
-  },
-  {
-    id: 4,
-    profile: 'Image',
-    fullName: 'Rossini Frances',
-    userName: 'Rossini',
-    role: 'Admin | Manager',
-    status: 'Active',
-    action: 'Edit'
-  },
-  {
-    id: 5,
-    profile: 'Image',
-    fullName: 'Harvey Roxie',
-    userName: 'Harvey',
-    role: 'Admin | Manager',
-    status: 'Active',
-    action: 'Edit'
-  },
-  {
-    id: 6,
-    profile: 'Image',
-    fullName: 'Cersei Lannister',
-    userName: 'Cersei',
-    role: 'Admin | Manager',
-    status: 'Inactive',
-    action: 'Edit'
-  },
-  {
-    id: 7,
-    profile: 'Image',
-    fullName: 'Daenerys Targaryen',
-    userName: 'Daenerys',
-    role: 'Admin | Manager',
-    status: 'Active',
-    action: 'Edit'
-  },
-  {
-    id: 8,
-    profile: 'Image',
-    fullName: 'Melisandre Stark',
-    userName: 'Melisandre',
-    role: 'Admin | Manager',
-    status: 'Active',
-    action: 'Edit'
-  },
-  {
-    id: 9,
-    profile: 'Image',
-    fullName: 'Ferrara Clifford',
-    userName: 'Ferrara',
-    role: 'Admin | Manager',
-    status: 'Active',
-    action: 'Edit'
-  }
-];
-
 const UserList = () => {
-  // const [data, setData] = React.useState([]);
+  const [rows, setRows] = React.useState([]);
 
   React.useEffect(() => {
-    // Fetch data when the component mounts
     fetchData();
   }, []);
 
   const fetchData = async () => {
     try {
-      const response = await fetch('https://cerebro.codspecial.com/api/users', {
+      const response = await fetch(API_URL, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         }
-      }); // Replace with your API URL
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
       const jsonData = await response.json();
-      console.log(jsonData);
-      // setData(jsonData);
+      const users = jsonData.users.map((user) => ({
+        id: user.id,
+        profile: 'Image',
+        fullName: `${user.firstname} ${user.lastname}`,
+        userName: user.username,
+        role: 'Admin | Manager',
+        status: 'Active',
+        action: 'Edit'
+      }));
+      setRows(users);
+      console.log(rows);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
